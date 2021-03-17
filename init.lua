@@ -1,3 +1,4 @@
+--3d random walker block
 function register_rwalker(nodegen, nodecopy)
 	minetest.register_node("randomwalker:"..nodegen, {
 		description = nodecopy.." random walker",
@@ -39,7 +40,20 @@ register_rwalker("default_cobble", "default:cobble")
 register_rwalker("default_mossycobble", "default:mossycobble")
 register_rwalker("air", "air")
 register_rwalker("default_meselamp", "default:meselamp")
+register_rwalker("default_desert_stone", "default:desert_stone")
+register_rwalker("default_stone", "default:stone")
+register_rwalker("default_diamond_block", "default:diamondblock")
+register_rwalker("default_obsidian", "default:obsidian")
+register_rwalker("default_mese_block", "default:mese_block")
+register_rwalker("default_jungletree", "default:jungletree")
+register_rwalker("default_junglewood", "default:junglewood")
+register_rwalker("default_ice", "default:ice")
+register_rwalker("default_furnace_front", "default:furnace")
+register_rwalker("default_chest_front", "default:chest")
+register_rwalker("default_bookshelf", "default:bookshelf")
 
+
+--stonkgen
 
 minetest.register_node("randomwalker:stonkgen", {
 	description = "Stonks Generator",
@@ -141,5 +155,30 @@ minetest.register_abm({
 		minetest.set_node({x=pos.x-1,y=pos.y,z=pos.z}, {name="randomwalker:stonkxminus"})
 		minetest.set_node({x=pos.x,y=pos.y,z=pos.z+1}, {name="randomwalker:stonkzplus"})
 		minetest.set_node({x=pos.x,y=pos.y,z=pos.z-1}, {name="randomwalker:stonkzminus"})
+	end
+})
+
+
+--bubble economy
+
+minetest.register_node("randomwalker:bubble", {
+	description = "Economic Bubble Stonk (biased randwalk like btc) X+ only",
+	tiles = {"bubble.png"}
+})
+minetest.register_abm({
+	nodenames = {"randomwalker:bubble"},
+	interval = 1,
+	chance = 2,
+	catch_up = false,
+	action = function(pos)
+		if math.random(0,2) == 0 then --1/3 down
+			minetest.set_node({x=pos.x+1,y=pos.y-1,z=pos.z}, {name="randomwalker:bubble"})
+			minetest.set_node(pos, {name="default:cloud"})
+		else --2/3 up
+			--if not pos.y == 0 then --0 is minimum for stocks because why not right
+				minetest.set_node({x=pos.x+1,y=pos.y+1,z=pos.z}, {name="randomwalker:bubble"})
+				minetest.set_node(pos, {name="default:cloud"})
+			--end
+		end
 	end
 })
