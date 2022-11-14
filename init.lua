@@ -2,28 +2,34 @@
 function register_rwalker(nodegen, nodecopy)
 	minetest.register_node("randomwalker:"..nodegen, {
 		description = nodecopy.." random walker",
-		tiles = {nodegen..".png"}
+		tiles = {nodegen..".png"},
+		groups = {randgen = 1},
 	})
 	minetest.register_abm({
 		nodenames = {"randomwalker:"..nodegen},
 		interval = 1,
 		chance = 1,
 		action = function(pos)
-			myaction = math.random(1, 6)
+			local myaction = math.random(1, 6)
+			local mypos
 			if myaction == 1 then
-				minetest.set_node({x=pos.x+1,y=pos.y,z=pos.z}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x+1,y=pos.y,z=pos.z}
 			elseif myaction == 2 then
-				minetest.set_node({x=pos.x-1,y=pos.y,z=pos.z}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x-1,y=pos.y,z=pos.z}
 			elseif myaction == 3 then
-				minetest.set_node({x=pos.x,y=pos.y+1,z=pos.z}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x,y=pos.y+1,z=pos.z}
 			elseif myaction == 4 then
-				minetest.set_node({x=pos.x,y=pos.y-1,z=pos.z}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x,y=pos.y-1,z=pos.z}
 			elseif myaction == 5 then
-				minetest.set_node({x=pos.x,y=pos.y,z=pos.z+1}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x,y=pos.y,z=pos.z+1}
 			elseif myaction == 6 then
-				minetest.set_node({x=pos.x,y=pos.y,z=pos.z-1}, {name="randomwalker:"..nodegen})
+				mypos = {x=pos.x,y=pos.y,z=pos.z-1}
 			end
-			minetest.set_node(pos, {name=nodecopy})
+			local myname = minetest.get_node(mypos).name
+			if minetest.registered_nodes[myname].groups.randgen ~= 1 and myname ~= "ignore" and myname ~= nil then
+				minetest.set_node(mypos, {name="randomwalker:"..nodegen})
+				minetest.set_node(pos, {name=nodecopy})
+			end
 		end
 	})
 end
